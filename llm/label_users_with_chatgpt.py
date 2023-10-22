@@ -38,31 +38,37 @@ for user in participants_to_tweets:  # This starts an infinite loop
     messages = []
     system_message = "You are deciding whether people are pro-science or anti-science with respect to COVID based on their tweets. Pro-science users generally express opinions that agree with conventional science and anti-science users may propagate conspiracies."
     messages.append({"role":"system","content":system_message})
-    message = "I am trying to classify twitter users as either pro-science or anti-science with respect to COVID. Pro-science users generally express opinions that agree with conventional science and anti-science users may propagate conspiracies. Could you classify a user based on this text. Your output should simply be pro-science, anti-science or unsure: \n"+participants_to_tweets[user]   
+    message = "I am trying to classify twitter users as either pro-science or anti-science with respect to COVID. Pro-science users generally express opinions that agree with conventional science and anti-science users may propagate conspiracies. Could you classify a user based on this text. Your output should simply be pro-science, anti-science or unsure: \n"+participants_to_tweets[user]
     token_count = len(encoding.encode(message))
-    if token_count > 4097:
-        message_list = message.split()
+    if token_count > 3500:
+        message_list = message.split("\n")
         current = 1
         
-    while token_count > 4097:
+    while token_count > 3500:
+        
         message = ""
         for x in message_list[:-current]:
             message += x + "\n"
+        token_count = len(encoding.encode(message))
+        print(token_count)
+        current += 1
     messages.append({"role":"user","content": message})
 
     response=openai.ChatCompletion.create(
      model="gpt-3.5-turbo",
      messages=messages
     )
-    time.sleep(60)
+    
 
     reply = response["choices"][0]["message"]["content"]
     try:
         with open("chatgpt_classifications.csv", "a+") as f:
             f.write(str(user)+","+reply+"\n")
+            time.sleep(30)
     except:
         with open("chatgpt_classifications.csv", "a+") as f:
             f.write(str(user)+","+reply+"\n")
+            time.sleep(30)
 #         a += 1
 #         if a == 2:
 #             break
