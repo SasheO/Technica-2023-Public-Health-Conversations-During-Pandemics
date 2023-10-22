@@ -38,7 +38,7 @@ for user in participants_to_tweets:  # This starts an infinite loop
     messages.append({"role":"user","content": message})
 
     response=openai.ChatCompletion.create(
-     model="gpt-4",
+     model="gpt-3.5",
      messages=messages
     )
     time.sleep(60)
