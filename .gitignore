@@ -1,3 +1,5 @@
 
 torontobooks_unigrams.bin
 llm/env
+llm/chatgpt_classifications.csv
+*.bin
